@@ -277,16 +277,16 @@ async function submitLeave(e) {
 // XÁC THỰC VÀ KHỞI TẠO
 // ============================================================
 onAuthStateChanged(auth, async u => {
-    if (!u) { location.href = "../../login.html"; return; }
+    if (!u) { location.href = "index.html"; return; }
     currentUser = u;
     userData = await getUser(u.uid);
 
-    if (!userData) { alert("Không tìm thấy hồ sơ tài khoản."); location.href = "../../login.html"; return; }
+    if (!userData) { alert("Không tìm thấy hồ sơ tài khoản."); location.href = "index.html"; return; }
 
     const role = String(userData.role || userData["vai trò"] || "employee").toLowerCase().trim();
     if (role === "admin" || role.includes("manager") || role.includes("trưởng phòng")) {
         alert("Bạn đang dùng tài khoản Quản lý. Hệ thống sẽ tự động chuyển về đúng trang...");
-        location.href = role === "admin" ? "../../pages/admin/dashboard.html" : "../../pages/manager/employees.html";
+        location.href = role === "admin" ? "pages/admin/dashboard.html" : "pages/manager/employees.html";
         return;
     }
 
@@ -311,7 +311,7 @@ onAuthStateChanged(auth, async u => {
 // ============================================================
 // GẮN SỰ KIỆN GIAO DIỆN
 // ============================================================
-if ($("logoutBtn")) $("logoutBtn").onclick = async () => { await signOut(auth); location.href = "../../login.html"; };
+if ($("logoutBtn")) $("logoutBtn").onclick = async () => { await signOut(auth); location.href = "index.html"; };
 if ($("checkInBtn")) $("checkInBtn").onclick = checkIn;
 if ($("checkOutBtn")) $("checkOutBtn").onclick = checkOut;
 if ($("leaveForm")) $("leaveForm").onsubmit = submitLeave;
