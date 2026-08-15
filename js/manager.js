@@ -316,7 +316,7 @@ async function loadReports() {
 // XÁC THỰC QUYỀN TRƯỞNG PHÒNG
 // ============================================================
 onAuthStateChanged(auth, async (u) => {
-    if (!u) { location.href = "../../login.html"; return; }
+    if (!u) { location.href = "index.html"; return; }
     try {
         me = u;
         profile = await user(u.uid);
