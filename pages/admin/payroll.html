@@ -269,7 +269,7 @@ style="background:#dc3545;color:white;">
 
 <script type="module">
     // 1. KẾT NỐI FIREBASE
-    import { db } from "../../js/firebase.js";
+    import { db } from "js/firebase.js";
     import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     // Hàm định dạng tiền tệ
@@ -360,7 +360,7 @@ style="background:#dc3545;color:white;">
 
     // 4. ĐĂNG XUẤT
     window.logout = function() {
-        window.location.href = "../../login.html";
+        window.location.href = "index.html";
     };
 
     // Tự động chạy khi tải trang
