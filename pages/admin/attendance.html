@@ -269,7 +269,7 @@ style="background:#dc3545;color:white;">
 
 <script type="module">
     // 1. KẾT NỐI FIREBASE
-    import { db } from "../../js/firebase.js";
+    import { db } from "js/firebase.js";
     import { collection, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     // Các hàm Helper lấy thời gian chuẩn
@@ -399,7 +399,7 @@ style="background:#dc3545;color:white;">
 
     // 5. ĐĂNG XUẤT
     window.logout = function() {
-        window.location.href = "../../login.html";
+        window.location.href = "index.html";
     };
 
     // Tự động chạy khi mở trang
