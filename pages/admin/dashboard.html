@@ -491,7 +491,7 @@
 
 <script type="module">
     // 1. KẾT NỐI FIREBASE
-    import { db } from "../../js/firebase.js";
+    import { db } from "js/firebase.js";
     import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     // Hàm Helper lấy ngày hôm nay chuẩn định dạng
@@ -601,7 +601,7 @@
 
     // 3. ĐĂNG XUẤT
     window.logout = function() {
-        window.location.href = "../../login.html";
+        window.location.href = "index.html";
     };
 
     // Tự động tải dữ liệu khi mở trang
