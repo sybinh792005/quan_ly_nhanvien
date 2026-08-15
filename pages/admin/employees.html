@@ -376,7 +376,7 @@
 
 <script type="module">
     // 1. KẾT NỐI FIREBASE
-    import { db } from "../../js/firebase.js";
+    import { db } from "js/firebase.js";
     import { collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     let editId = null; // Dùng để lưu ID của Firebase thay vì index của mảng
@@ -523,7 +523,7 @@
 
     // 7. ĐĂNG XUẤT
     window.logout = function() {
-        window.location.href = "../../login.html";
+        window.location.href = "index.html";
     };
 
     // KHỞI CHẠY LẦN ĐẦU KHI VÀO TRANG
