@@ -98,7 +98,7 @@
 
 <!-- KẾT NỐI FIREBASE -->
 <script type="module">
-    import { db } from "../../js/firebase.js";
+    import { db } from "js/firebase.js";
     import { collection, getDocs, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     // 1. TẢI TOÀN BỘ ĐƠN NGHỈ PHÉP TỪ CLOUD
@@ -173,7 +173,7 @@
 
     // 3. ĐĂNG XUẤT
     window.logout = function() {
-        window.location.href = "../../login.html";
+        window.location.href = "index.html";
     };
 
     // TỰ ĐỘNG CHẠY KHI VÀO TRANG
