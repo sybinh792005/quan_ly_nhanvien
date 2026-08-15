@@ -329,7 +329,7 @@ Xuất báo cáo
 
 <script type="module">
     // 1. KẾT NỐI FIREBASE
-    import { db } from "../../js/firebase.js";
+    import { db } from "js/firebase.js";
     import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
     // Mảng lưu trữ dữ liệu nhân viên dùng để xuất file CSV
@@ -410,7 +410,7 @@ Xuất báo cáo
 
     // 4. ĐĂNG XUẤT
     window.logout = function() {
-        window.location.href = "../../login.html";
+        window.location.href = "index.html";
     };
 
     // Khởi chạy
