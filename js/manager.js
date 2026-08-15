@@ -326,7 +326,7 @@ onAuthStateChanged(auth, async (u) => {
         const allowed = ["manager", "trưởng phòng", "giám đốc", "admin"];
         if (!allowed.some(x => roleText.includes(x))) {
             alert("Bạn không có quyền truy cập trang Trưởng phòng.");
-            location.href = "../../login.html";
+            location.href = "index.html";
             return;
         }
 
@@ -349,7 +349,7 @@ onAuthStateChanged(auth, async (u) => {
 // ============================================================
 // GẮN SỰ KIỆN NÚT BẤM (EVENT DELEGATION)
 // ============================================================
-if ($("logoutBtn")) $("logoutBtn").onclick = async () => { await signOut(auth); location.href = "../../login.html"; };
+if ($("logoutBtn")) $("logoutBtn").onclick = async () => { await signOut(auth); location.href = "index.html"; };
 if ($("openAddModalBtn")) $("openAddModalBtn").onclick = () => { if ($("empId")) $("empId").value = ""; if ($("managerEmpForm")) $("managerEmpForm").reset(); if ($("managerModal")) $("managerModal").classList.add("show"); };
 if ($("cancelBtn")) $("cancelBtn").onclick = () => { if ($("managerModal")) $("managerModal").classList.remove("show"); };
 if ($("managerEmpForm")) $("managerEmpForm").onsubmit = saveEmployee;
