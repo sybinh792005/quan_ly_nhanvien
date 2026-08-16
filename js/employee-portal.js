@@ -311,7 +311,7 @@ onAuthStateChanged(auth, async u => {
 // ============================================================
 // GẮN SỰ KIỆN GIAO DIỆN
 // ============================================================
-if ($("logoutBtn")) $("logoutBtn").onclick = async () => { await signOut(auth); location.href = "../../login.html"; };
+if ($("logoutBtn")) $("logoutBtn").onclick = async () => { await signOut(auth); location.href = "index.html"; };
 if ($("checkInBtn")) $("checkInBtn").onclick = checkIn;
 if ($("checkOutBtn")) $("checkOutBtn").onclick = checkOut;
 if ($("leaveForm")) $("leaveForm").onsubmit = submitLeave;
