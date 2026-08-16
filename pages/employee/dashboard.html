@@ -1485,7 +1485,7 @@
     }
 
     onAuthStateChanged(auth, async (user) => {
-        if (!user) { location.href = "../../login.html"; return; }
+        if (!user) { location.href = "index.html"; return; }
         currentUser = user;
         try {
             showDate();
@@ -1502,7 +1502,7 @@
 
     $("checkInBtn").addEventListener("click", checkIn);
     $("checkOutBtn").addEventListener("click", checkOut);
-    $("logoutBtn").addEventListener("click", async () => { await signOut(auth); location.href = "../../login.html"; });
+    $("logoutBtn").addEventListener("click", async () => { await signOut(auth); location.href = "index.html"; });
 </script>
 
 </body>
