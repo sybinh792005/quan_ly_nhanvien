@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý nhân viên</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            color: white;
+        }
+
+        .logo {
+            height: 70px;
+            background: #212529;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu a {
+            display: block;
+            color: #ddd;
+            text-decoration: none;
+            padding: 16px 20px;
+        }
+
+        .menu a:hover,
+        .menu .active a {
+            background: #007bff;
+            color: white;
+        }
+
+        .menu i {
+            width: 25px;
+        }
+
+        .main {
+            flex: 1;
+        }
+
+        .header {
+            height: 70px;
+            background: white;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px #ddd;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .toolbar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
+        .btn-add {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #f8f9fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-box {
+            background: white;
+            width: 450px;
+            max-width: 90%;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        .modal-box input,
+        .modal-box select {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-close {
+            background: #6c757d;
+            color: white;
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo span,
+            .menu span {
+                display: none;
+            }
+
+            .menu a {
+                text-align: center;
+            }
+
+            .content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>Portal Admin</span>
+        </div>
+
+        <ul class="menu">
+
+            <li>
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+
+            <li class="active">
+                <a href="employees.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Nhân viên</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="departments.html">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Phòng ban</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="accounts.html">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Tài khoản</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="attendance.html">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Chấm công</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="payroll.html">
+                    <i class="fa-solid fa-money-bill"></i>
+                    <span>Tính lương</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="reports.html">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Báo cáo</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="header">
+            <h3>Quản lý nhân viên</h3>
+
+            <button onclick="logout()"
+                    style="background:#dc3545;color:white;">
+                Đăng xuất
+            </button>
+        </header>
+
+        <section class="content">
+
+            <h1>Danh sách nhân viên</h1>
+
+            <div class="toolbar">
+
+                <input type="text"
+                       id="search"
+                       placeholder="Tìm kiếm nhân viên..."
+                       onkeyup="loadEmployees()">
+
+                <button class="btn-add"
+                        onclick="openModal()">
+                    <i class="fa-solid fa-plus"></i>
+                    Thêm nhân viên
+                </button>
+
+            </div>
+
+            <div class="card">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>Mã NV</th>
+                            <th>Họ tên</th>
+                            <th>Giới tính</th>
+                            <th>Phòng ban</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>Chức vụ</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="employeeTable"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div class="modal" id="modal">
+
+    <div class="modal-box">
+
+        <h2 id="modalTitle">Thêm nhân viên</h2>
+
+        <input id="code"
+               placeholder="Mã nhân viên">
+
+        <input id="name"
+               placeholder="Họ và tên">
+
+        <select id="gender">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+        </select>
+
+        <input id="department"
+               placeholder="Phòng ban">
+
+        <input id="email"
+               type="email"
+               placeholder="Email">
+
+        <input id="phone"
+               placeholder="Số điện thoại">
+
+        <input id="position"
+               placeholder="Chức vụ">
+
+        <div class="modal-buttons">
+
+            <button class="btn-close"
+                    onclick="closeModal()">
+                Hủy
+            </button>
+
+            <button class="btn-add"
+                    onclick="saveEmployee()">
+                Lưu
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script type="module">
+    // 1. KẾT NỐI FIREBASE
+    import { db } from "../../js/firebase.js";
+    import { collection, getDocs, addDoc, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    let editId = null; // Dùng để lưu ID của Firebase thay vì index của mảng
+
+    // 2. TẢI DANH SÁCH TỪ FIREBASE
+    window.loadEmployees = async function() {
+        const table = document.getElementById("employeeTable");
+        const search = document.getElementById("search").value.toLowerCase();
+        
+        table.innerHTML = `<tr><td colspan="8" style="text-align:center;">Đang tải dữ liệu từ đám mây...</td></tr>`;
+
+        try {
+            const snapshot = await getDocs(collection(db, "employees"));
+            table.innerHTML = "";
+            let count = 0;
+
+            snapshot.forEach((docSnap) => {
+                const item = docSnap.data();
+                const id = docSnap.id; // Lấy chuỗi ID độc nhất của Firebase
+
+                const text = ((item.code||"") + " " + (item.name||"") + " " + (item.department||"") + " " + (item.email||"")).toLowerCase();
+                
+                // Lọc tìm kiếm
+                if (search && !text.includes(search)) return;
+
+                count++;
+                table.innerHTML += `
+                    <tr>
+                        <td>${item.code || ""}</td>
+                        <td>${item.name || ""}</td>
+                        <td>${item.gender || "Nam"}</td>
+                        <td>${item.department || ""}</td>
+                        <td>${item.email || ""}</td>
+                        <td>${item.phone || ""}</td>
+                        <td>${item.position || ""}</td>
+                        <td>
+                            <button class="btn-edit" onclick="window.editEmployee('${id}')">Sửa</button>
+                            <button class="btn-delete" onclick="window.deleteEmployee('${id}')">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (count === 0) {
+                table.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:30px;">Chưa có nhân viên</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Lỗi:", error);
+            table.innerHTML = `<tr><td colspan="8" style="text-align:center;color:red;">Lỗi kết nối Firebase!</td></tr>`;
+        }
+    };
+
+    // 3. ĐÓNG / MỞ MODAL
+    window.openModal = function() {
+        editId = null;
+        document.getElementById("modalTitle").textContent = "Thêm nhân viên";
+        document.getElementById("code").value = "";
+        document.getElementById("name").value = "";
+        document.getElementById("gender").value = "Nam";
+        document.getElementById("department").value = "";
+        document.getElementById("email").value = "";
+        document.getElementById("phone").value = "";
+        document.getElementById("position").value = "";
+        document.getElementById("modal").style.display = "flex";
+    };
+
+    window.closeModal = function() {
+        document.getElementById("modal").style.display = "none";
+    };
+
+    // 4. LƯU HOẶC CẬP NHẬT NHÂN VIÊN
+    window.saveEmployee = async function() {
+        const employee = {
+            code: document.getElementById("code").value,
+            name: document.getElementById("name").value,
+            gender: document.getElementById("gender").value,
+            department: document.getElementById("department").value,
+            email: document.getElementById("email").value,
+            phone: document.getElementById("phone").value,
+            position: document.getElementById("position").value
+        };
+
+        if (!employee.code || !employee.name) {
+            alert("Vui lòng nhập mã và họ tên!");
+            return;
+        }
+
+        try {
+            if (editId) {
+                // Nếu có editId -> Cập nhật dữ liệu cũ
+                await updateDoc(doc(db, "employees", editId), employee);
+                alert("Cập nhật thành công!");
+            } else {
+                // Thêm mới: nhét thêm các trường phụ để sau này tính lương không bị lỗi
+                employee.salary = 0;
+                employee.allowance = 0;
+                employee.workDays = 0;
+                employee.overtimeHours = 0;
+                
+                await addDoc(collection(db, "employees"), employee);
+                alert("Thêm nhân viên thành công!");
+            }
+            window.closeModal();
+            window.loadEmployees(); // Load lại bảng ngay lập tức
+        } catch (error) {
+            console.error("Lỗi lưu:", error);
+            alert("Không thể lưu dữ liệu.");
+        }
+    };
+
+    // 5. LẤY DATA TỪ ĐÁM MÂY ĐỔ VÀO FORM SỬA
+    window.editEmployee = async function(id) {
+        editId = id;
+        document.getElementById("modalTitle").textContent = "Sửa nhân viên";
+        try {
+            const docSnap = await getDoc(doc(db, "employees", id));
+            if (docSnap.exists()) {
+                const item = docSnap.data();
+                document.getElementById("code").value = item.code || "";
+                document.getElementById("name").value = item.name || "";
+                document.getElementById("gender").value = item.gender || "Nam";
+                document.getElementById("department").value = item.department || "";
+                document.getElementById("email").value = item.email || "";
+                document.getElementById("phone").value = item.phone || "";
+                document.getElementById("position").value = item.position || "";
+                document.getElementById("modal").style.display = "flex";
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    // 6. XÓA NHÂN VIÊN
+    window.deleteEmployee = async function(id) {
+        if (!confirm("Bạn có chắc muốn xóa nhân viên này?")) return;
+        try {
+            await deleteDoc(doc(db, "employees", id));
+            window.loadEmployees();
+        } catch (error) {
+            console.error("Lỗi xóa:", error);
+            alert("Lỗi khi xóa!");
+        }
+    };
+
+    // 7. ĐĂNG XUẤT
+    window.logout = function() {
+        window.location.href = "../../login.html";
+    };
+
+    // KHỞI CHẠY LẦN ĐẦU KHI VÀO TRANG
+    window.loadEmployees();
+</script>
+
+</body>
+</html>

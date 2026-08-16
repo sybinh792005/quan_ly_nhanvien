@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Đơn nghỉ phép - Admin</title>
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, sans-serif; background: #f4f6f9; color: #333; }
+        .container { display: flex; min-height: 100vh; }
+        
+        /* SIDEBAR */
+        .sidebar { width: 250px; background: #343a40; color: white; flex-shrink: 0; }
+        .logo { height: 70px; background: #212529; display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 19px; }
+        .logo i { margin-right: 10px; }
+        .menu { list-style: none; padding: 0; margin: 0; }
+        .menu a { display: block; padding: 16px 20px; color: #ddd; text-decoration: none; }
+        .menu a:hover, .menu .active a { background: #007bff; color: white; }
+        .menu i { width: 25px; }
+        
+        /* MAIN CONTENT */
+        .main { flex: 1; }
+        .header { height: 70px; background: white; padding: 0 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px #ddd; }
+        .header h3 { margin: 0; color: #2c3e50; }
+        .logout { border: none; background: #dc3545; color: white; padding: 9px 15px; border-radius: 5px; cursor: pointer; }
+        
+        /* CONTENT */
+        .content { padding: 30px; }
+        .card { background: white; padding: 20px; border-radius: 8px; overflow-x: auto; box-shadow: 0 2px 6px rgba(0,0,0,.06); }
+        
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; }
+        th { background: #f8f9fa; color: #495057; }
+        select.status-select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; cursor: pointer; outline: none; }
+        select.status-select:focus { border-color: #007bff; }
+
+        @media(max-width: 700px) {
+            .sidebar { width: 70px; }
+            .logo span, .menu span { display: none; }
+            .menu a { text-align: center; }
+            .content { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>Portal Admin</span>
+        </div>
+        <ul class="menu">
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-pie"></i><span>Tổng quan</span></a></li>
+            <li><a href="employees.html"><i class="fa-solid fa-users"></i><span>Nhân viên</span></a></li>
+            <li><a href="departments.html"><i class="fa-solid fa-building"></i><span>Phòng ban</span></a></li>
+            <li><a href="accounts.html"><i class="fa-solid fa-user-gear"></i><span>Tài khoản</span></a></li>
+            <li><a href="attendance.html"><i class="fa-solid fa-calendar-check"></i><span>Chấm công</span></a></li>
+            <li class="active"><a href="leaves.html"><i class="fa-solid fa-envelope-open-text"></i><span>Đơn xin nghỉ</span></a></li>
+            <li><a href="payroll.html"><i class="fa-solid fa-money-bill"></i><span>Tính lương</span></a></li>
+            <li><a href="reports.html"><i class="fa-solid fa-chart-column"></i><span>Báo cáo</span></a></li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <h3>Quản lý Đơn nghỉ phép</h3>
+            <button class="logout" onclick="window.logout()">
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+            </button>
+        </header>
+        <section class="content">
+            <h1 style="margin-top: 0;">Danh sách toàn bộ Đơn xin nghỉ</h1>
+            <p style="color: #666; margin-bottom: 20px;">Admin có quyền xem và can phê duyệt đơn từ của mọi phòng ban.</p>
+            
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nhân viên</th>
+                            <th>Phòng ban</th>
+                            <th>Từ ngày</th>
+                            <th>Đến ngày</th>
+                            <th>Loại nghỉ</th>
+                            <th>Lý do</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaveBody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- KẾT NỐI FIREBASE -->
+<script type="module">
+    import { db } from "../../js/firebase.js";
+    import { collection, getDocs, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    // 1. TẢI TOÀN BỘ ĐƠN NGHỈ PHÉP TỪ CLOUD
+    window.loadLeaves = async function() {
+        const body = document.getElementById("leaveBody");
+        body.innerHTML = `<tr><td colspan="7" style="text-align:center;">Đang tải dữ liệu đám mây...</td></tr>`;
+
+        try {
+            // Lấy toàn bộ đơn nghỉ phép (Không dùng 'where' để Admin lấy được tất cả)
+            const snap = await getDocs(collection(db, "leaves"));
+            body.innerHTML = "";
+            let count = 0;
+
+            snap.forEach((s) => {
+                count++;
+                const x = s.data();
+                const id = s.id;
+                
+                // Đổi màu Dropdown tùy theo trạng thái
+                let selectStyle = "";
+                if(x.status === "approved") selectStyle = "color: green; font-weight: bold;";
+                else if(x.status === "rejected") selectStyle = "color: red; font-weight: bold;";
+                else selectStyle = "color: #ffc107; font-weight: bold;";
+
+                body.innerHTML += `
+                    <tr>
+                        <td><b>${x.name || ""}</b></td>
+                        <td>${x.department || "Không rõ"}</td>
+                        <td>${x.from || ""}</td>
+                        <td>${x.to || ""}</td>
+                        <td>${x.type || ""}</td>
+                        <td>${x.reason || ""}</td>
+                        <td>
+                            <select class="status-select" style="${selectStyle}" onchange="window.updateLeaveStatus('${id}', this.value, this)">
+                                <option value="pending" style="color: #ffc107;" ${x.status === "pending" ? "selected" : ""}>Chờ duyệt</option>
+                                <option value="approved" style="color: green;" ${x.status === "approved" ? "selected" : ""}>Đã duyệt</option>
+                                <option value="rejected" style="color: red;" ${x.status === "rejected" ? "selected" : ""}>Từ chối</option>
+                            </select>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (count === 0) {
+                body.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;">Chưa có đơn xin nghỉ nào trên hệ thống.</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Lỗi tải đơn nghỉ phép:", error);
+            body.innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;">Lỗi kết nối Firebase</td></tr>`;
+        }
+    };
+
+    // 2. CẬP NHẬT TRẠNG THÁI ĐƠN VÀO FIREBASE
+    window.updateLeaveStatus = async function(id, newStatus, selectElement) {
+        try {
+            await updateDoc(doc(db, "leaves", id), { 
+                status: newStatus, 
+                approvedAt: serverTimestamp() 
+            });
+            
+            // Cập nhật lại màu sắc của ô Select ngay lập tức cho đẹp mắt
+            if(newStatus === "approved") selectElement.style = "color: green; font-weight: bold;";
+            else if(newStatus === "rejected") selectElement.style = "color: red; font-weight: bold;";
+            else selectElement.style = "color: #ffc107; font-weight: bold;";
+
+            alert("Đã cập nhật trạng thái đơn xin nghỉ thành công!");
+        } catch (error) {
+            console.error("Lỗi duyệt đơn:", error);
+            alert("Không thể cập nhật trạng thái lên đám mây!");
+        }
+    };
+
+    // 3. ĐĂNG XUẤT
+    window.logout = function() {
+        window.location.href = "../../login.html";
+    };
+
+    // TỰ ĐỘNG CHẠY KHI VÀO TRANG
+    window.loadLeaves();
+</script>
+</body>
+</html>
