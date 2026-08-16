@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Chấm công</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: #343a40;
+    color: white;
+}
+
+.logo {
+    height: 70px;
+    background: #212529;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.logo i {
+    margin-right: 10px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu a {
+    display: block;
+    padding: 16px 20px;
+    color: #ddd;
+    text-decoration: none;
+}
+
+.menu a:hover,
+.menu .active a {
+    background: #007bff;
+    color: white;
+}
+
+.menu i {
+    width: 25px;
+}
+
+.main {
+    flex: 1;
+}
+
+.header {
+    height: 70px;
+    background: white;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content {
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+.checkin {
+    background: #28a745;
+    color: white;
+}
+
+.checkout {
+    background: #dc3545;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #f8f9fa;
+}
+
+@media(max-width:700px) {
+
+    .sidebar {
+        width: 70px;
+    }
+
+    .logo span,
+    .menu span {
+        display: none;
+    }
+
+    .menu a {
+        text-align: center;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<i class="fa-solid fa-user-shield"></i>
+
+<span>Portal Admin</span>
+
+</div>
+
+<ul class="menu">
+
+<li>
+<a href="dashboard.html">
+<i class="fa-solid fa-chart-pie"></i>
+<span>Tổng quan</span>
+</a>
+</li>
+
+<li>
+<a href="employees.html">
+<i class="fa-solid fa-users"></i>
+<span>Nhân viên</span>
+</a>
+</li>
+
+<li>
+<a href="departments.html">
+<i class="fa-solid fa-building"></i>
+<span>Phòng ban</span>
+</a>
+</li>
+
+<li>
+<a href="accounts.html">
+<i class="fa-solid fa-user-gear"></i>
+<span>Tài khoản</span>
+</a>
+</li>
+
+<li class="active">
+<a href="attendance.html">
+<i class="fa-solid fa-calendar-check"></i>
+<span>Chấm công</span>
+</a>
+</li>
+
+<li>
+<a href="payroll.html">
+<i class="fa-solid fa-money-bill"></i>
+<span>Tính lương</span>
+</a>
+</li>
+
+<li>
+<a href="reports.html">
+<i class="fa-solid fa-chart-column"></i>
+<span>Báo cáo</span>
+</a>
+</li>
+
+</ul>
+
+</aside>
+
+<main class="main">
+
+<header class="header">
+
+<h3>Quản lý chấm công</h3>
+
+<button onclick="logout()"
+style="background:#dc3545;color:white;">
+Đăng xuất
+</button>
+
+</header>
+
+<section class="content">
+
+<h1>Chấm công nhân viên</h1>
+
+<p id="date"></p>
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>STT</th>
+<th>Nhân viên</th>
+<th>Phòng ban</th>
+<th>Giờ vào</th>
+<th>Giờ ra</th>
+<th>Trạng thái</th>
+<th>Thao tác</th>
+
+</tr>
+
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+<script type="module">
+    // 1. KẾT NỐI FIREBASE
+    import { db } from "../../js/firebase.js";
+    import { collection, getDocs, doc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    // Các hàm Helper lấy thời gian chuẩn
+    const dateKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const timeNow = () => new Date().toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+    // 2. TẢI DANH SÁCH NHÂN VIÊN VÀ TRẠNG THÁI CHẤM CÔNG HÔM NAY
+    window.loadAttendance = async function() {
+        const dateStrDisplay = new Date().toLocaleDateString("vi-VN");
+        document.getElementById("date").textContent = "Ngày: " + dateStrDisplay;
+        
+        const todayKey = dateKey(new Date());
+        const table = document.getElementById("table");
+        table.innerHTML = `<tr><td colspan="7" style="text-align:center;">Đang tải dữ liệu đám mây...</td></tr>`;
+
+        try {
+            // 2.1 Lấy toàn bộ nhân viên
+            const empSnap = await getDocs(collection(db, "employees"));
+            let employees = [];
+            empSnap.forEach(d => employees.push({ id: d.id, ...d.data() }));
+
+            // 2.2 Lấy dữ liệu chấm công trên toàn hệ thống
+            const attSnap = await getDocs(collection(db, "attendance"));
+            let todayAtt = {};
+            attSnap.forEach(d => {
+                const a = d.data();
+                // Lọc những bản ghi thuộc về ngày hôm nay
+                if (a.dateKey === todayKey || a.date === dateStrDisplay) {
+                    // Dùng employeeId (do admin tạo) hoặc uid (do nhân viên tự tạo) làm khóa đối chiếu
+                    let key = a.employeeId || a.uid || a.employeeCode || a.code;
+                    todayAtt[key] = { id: d.id, ...a };
+                }
+            });
+
+            table.innerHTML = "";
+            let count = 0;
+
+            // 2.3 Ráp dữ liệu nhân viên với dữ liệu chấm công hôm nay
+            employees.forEach((emp) => {
+                // Thử tìm bản ghi chấm công của nhân viên này
+                const att = todayAtt[emp.id] || todayAtt[emp.code];
+                
+                let status = "Chưa chấm";
+                // Nút bấm mặc định
+                let checkInBtn = `<button class="checkin" onclick="window.checkIn('${emp.id}', '${emp.code || ''}', '${emp.name || ''}', '${emp.department || ''}')">Check-in</button>`;
+                let checkOutBtn = `<button class="checkout" onclick="window.checkOut('${att ? att.id : ''}')">Check-out</button>`;
+
+                // Xử lý logic ẩn/hiện nút dựa trên trạng thái
+                if (att && att.checkIn) {
+                    checkInBtn = ""; // Đã check-in thì ẩn nút Check-in
+                    status = "Đang làm";
+                }
+                if (att && att.checkOut) {
+                    checkOutBtn = ""; // Đã check-out thì ẩn nút Check-out
+                    status = "Hoàn thành";
+                }
+                if (!att || !att.checkIn) {
+                    checkOutBtn = ""; // Chưa check-in thì không được phép check-out
+                }
+
+                count++;
+                table.innerHTML += `
+                    <tr>
+                        <td>${count}</td>
+                        <td>${emp.name}</td>
+                        <td>${emp.department || ""}</td>
+                        <td>${att ? (att.checkIn || "-") : "-"}</td>
+                        <td>${att ? (att.checkOut || "-") : "-"}</td>
+                        <td><span style="font-weight:bold; color: ${status === 'Hoàn thành' ? 'green' : (status === 'Đang làm' ? '#ffc107' : 'red')}">${status}</span></td>
+                        <td>${checkInBtn} ${checkOutBtn}</td>
+                    </tr>
+                `;
+            });
+
+            if (count === 0) {
+                table.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;">Chưa có nhân viên nào trên hệ thống</td></tr>`;
+            }
+
+        } catch (error) {
+            console.error("Lỗi tải chấm công:", error);
+            table.innerHTML = `<tr><td colspan="7" style="text-align:center;color:red;">Lỗi kết nối Firebase</td></tr>`;
+        }
+    };
+
+    // 3. ADMIN CHECK-IN THAY CHO NHÂN VIÊN
+    window.checkIn = async function(empId, empCode, empName, empDept) {
+        const todayKey = dateKey(new Date());
+        // Tạo một ID tài liệu Firebase duy nhất cho ngày hôm nay của nhân viên này
+        const docId = empId + "_" + todayKey; 
+
+        try {
+            await setDoc(doc(db, "attendance", docId), {
+                employeeId: empId,
+                employeeCode: empCode,
+                name: empName,
+                department: empDept,
+                dateKey: todayKey,
+                date: new Date().toLocaleDateString("vi-VN"),
+                checkIn: timeNow(),
+                checkOut: "",
+                workDays: 1,         // Mặc định tính 1 ngày công
+                overtimeHours: 0
+            }, { merge: true }); // Dùng merge để không ghi đè mất dữ liệu nếu đã có
+            
+            alert(`Đã Check-in cho ${empName}!`);
+            window.loadAttendance(); // Load lại bảng
+        } catch (error) {
+            console.error(error);
+            alert("Lỗi khi ghi dữ liệu Check-in lên đám mây!");
+        }
+    };
+
+    // 4. ADMIN CHECK-OUT THAY CHO NHÂN VIÊN
+    window.checkOut = async function(attDocId) {
+        if(!attDocId) return;
+        try {
+            await updateDoc(doc(db, "attendance", attDocId), {
+                checkOut: timeNow()
+            });
+            alert("Đã Check-out thành công!");
+            window.loadAttendance();
+        } catch (error) {
+            console.error(error);
+            alert("Lỗi khi ghi dữ liệu Check-out!");
+        }
+    };
+
+    // 5. ĐĂNG XUẤT
+    window.logout = function() {
+        window.location.href = "../../index.html";
+    };
+
+    // Tự động chạy khi mở trang
+    window.loadAttendance();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Quản lý tài khoản</title>
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        /* ================================
+           CONTAINER
+        ================================= */
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ================================
+           SIDEBAR
+        ================================= */
+
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: #343a40;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #212529;
+        }
+
+        .sidebar-brand h3 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .sidebar-brand i {
+            margin-right: 8px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .sidebar-menu li.active a {
+            background: #007bff;
+            color: white;
+        }
+
+        .sidebar-menu i {
+            width: 25px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        /* ================================
+           MAIN
+        ================================= */
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .top-header {
+            height: 75px;
+            background: white;
+            padding: 15px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        .top-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .today {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* ================================
+           BUTTON
+        ================================= */
+
+        .btn {
+            border: none;
+            padding: 9px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0069d9;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        /* ================================
+           CONTENT
+        ================================= */
+
+        .content-body {
+            padding: 30px;
+        }
+
+        .page-title {
+            margin: 0 0 5px;
+            font-size: 25px;
+            color: #2c3e50;
+        }
+
+        .page-description {
+            margin: 0 0 25px;
+            color: #6c757d;
+        }
+
+        /* ================================
+           CARD
+        ================================= */
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        /* ================================
+           TOOLBAR
+        ================================= */
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search {
+            width: 350px;
+            padding: 10px 12px;
+
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: #007bff;
+        }
+
+        /* ================================
+           TABLE
+        ================================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            color: #495057;
+
+            padding: 12px 10px;
+            text-align: left;
+
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .data-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* ================================
+           STATUS
+        ================================= */
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* ================================
+           MODAL
+        ================================= */
+
+        .modal {
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0,0,0,0.45);
+
+            display: none;
+
+            justify-content: center;
+            align-items: center;
+
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 650px;
+            max-width: 95%;
+
+            background: white;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            border-bottom: 1px solid #eee;
+
+            padding-bottom: 15px;
+
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .close {
+            border: none;
+            background: transparent;
+
+            font-size: 28px;
+
+            cursor: pointer;
+
+            color: #777;
+        }
+
+        /* ================================
+           FORM
+        ================================= */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            margin-bottom: 6px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 10px;
+
+            border: 1px solid #ced4da;
+
+            border-radius: 5px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #007bff;
+        }
+
+        .password-box {
+            display: flex;
+        }
+
+        .password-box input {
+            flex: 1;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .password-box button {
+            width: 45px;
+
+            border: 1px solid #ced4da;
+            border-left: none;
+
+            background: #f8f9fa;
+
+            cursor: pointer;
+
+            border-radius: 0 5px 5px 0;
+        }
+
+        .form-actions {
+            margin-top: 20px;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+        }
+
+        .note {
+            background: #e9f2ff;
+
+            color: #004085;
+
+            padding: 12px;
+
+            border-radius: 5px;
+
+            margin-bottom: 15px;
+
+            font-size: 13px;
+        }
+
+        .empty {
+            text-align: center;
+
+            padding: 25px;
+
+            color: #6c757d;
+        }
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .sidebar {
+                width: 65px;
+            }
+
+            .sidebar-brand h3 {
+                font-size: 0;
+            }
+
+            .sidebar-brand i {
+                font-size: 20px;
+                margin: 0;
+            }
+
+            .sidebar-menu span {
+                display: none;
+            }
+
+            .sidebar-menu a {
+                justify-content: center;
+            }
+
+            .sidebar-menu i {
+                margin: 0;
+            }
+
+            .content-body {
+                padding: 15px;
+            }
+
+            .today {
+                display: none;
+            }
+
+            .search {
+                width: 100%;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="admin-container">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <h3>
+                <i class="fa-solid fa-user-shield"></i>
+                Portal Admin
+            </h3>
+
+        </div>
+
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="employees.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Quản lý nhân viên</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="departments.html">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Quản lý phòng ban</span>
+                </a>
+            </li>
+
+            <li class="active">
+                <a href="accounts.html">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Quản lý tài khoản</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="attendance.html">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Chấm công</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="payroll.html">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Tính lương</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="reports.html">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Báo cáo</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <div class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <h3 id="welcome">
+                Xin chào Admin
+            </h3>
+
+            <div class="header-right">
+
+                <span
+                    id="today"
+                    class="today">
+                </span>
+
+                <button
+                    class="btn btn-danger"
+                    id="logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Đăng xuất
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================================
+             CONTENT
+        ========================================== -->
+
+        <main class="content-body">
+
+
+            <h1 class="page-title">
+                Quản lý tài khoản
+            </h1>
+
+
+            <p class="page-description">
+                Tạo và quản lý tài khoản đăng nhập cho nhân viên,
+                trưởng phòng và quản trị viên.
+            </p>
+
+
+            <!-- =========================================
+                 CARD
+            ========================================== -->
+
+            <div class="card">
+
+
+                <div class="toolbar">
+
+                    <input
+                        id="search"
+                        class="search"
+                        placeholder="Tìm theo tên, email, vai trò...">
+
+
+                    <button
+                        id="addAccount"
+                        class="btn btn-primary">
+
+                        <i class="fa-solid fa-user-plus"></i>
+
+                        Thêm tài khoản
+
+                    </button>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="data-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Họ tên
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Vai trò
+                                </th>
+
+                                <th>
+                                    Phòng ban
+                                </th>
+
+                                <th>
+                                    UID
+                                </th>
+
+                                <th>
+                                    Trạng thái
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="tbody">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     MODAL THÊM TÀI KHOẢN
+========================================== -->
+
+<div
+    class="modal"
+    id="accountModal">
+
+
+    <div class="modal-box">
+
+
+        <div class="modal-header">
+
+            <h2>
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Tạo tài khoản
+
+            </h2>
+
+
+            <button
+                class="close"
+                id="closeModal">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div class="note">
+
+            <i class="fa-solid fa-circle-info"></i>
+
+            Tài khoản được tạo sẽ sử dụng email và mật khẩu
+            để đăng nhập vào hệ thống.
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+            <!-- HỌ TÊN -->
+
+            <div class="form-group">
+
+                <label>
+                    Họ và tên
+                </label>
+
+                <input
+                    id="name"
+                    type="text"
+                    placeholder="Nguyễn Văn A">
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label>
+                    Email đăng nhập
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="example@gmail.com">
+
+            </div>
+
+
+            <!-- MẬT KHẨU -->
+
+            <div class="form-group">
+
+                <label>
+                    Mật khẩu
+                </label>
+
+                <div class="password-box">
+
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Ít nhất 6 ký tự">
+
+                    <button
+                        type="button"
+                        id="showPassword">
+
+                        <i class="fa-solid fa-eye"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- VAI TRÒ -->
+
+            <div class="form-group">
+
+                <label>
+                    Vai trò
+                </label>
+
+                <select id="role">
+
+                    <option value="employee">
+                        Nhân viên
+                    </option>
+
+                    <option value="manager">
+                        Trưởng phòng
+                    </option>
+
+                    <option value="admin">
+                        Admin
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- PHÒNG BAN -->
+
+            <div class="form-group">
+
+                <label>
+                    Phòng ban
+                </label>
+
+                <select id="department">
+
+                    <option value="">
+                        -- Chọn phòng ban --
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CHỨC VỤ -->
+
+            <div class="form-group">
+
+                <label>
+                    Chức vụ
+                </label>
+
+                <input
+                    id="position"
+                    type="text"
+                    placeholder="Nhân viên">
+
+            </div>
+
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                class="btn btn-secondary"
+                id="cancel">
+
+                Hủy
+
+            </button>
+
+
+            <button
+                class="btn btn-success"
+                id="saveAccount">
+
+                <i class="fa-solid fa-floppy-disk"></i>
+
+                Tạo tài khoản
+
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     JAVASCRIPT
+========================================== -->
+
+<script type="module">
+
+
+/* =========================================
+   FIREBASE HIỆN TẠI
+========================================= */
+
+import {
+    auth,
+    db
+} from "../../js/firebase.js";
+
+
+/* =========================================
+   FIREBASE AUTH
+========================================= */
+
+import {
+    onAuthStateChanged,
+    signOut,
+    createUserWithEmailAndPassword,
+    getAuth
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+
+
+/* =========================================
+   FIRESTORE
+========================================= */
+
+import {
+    collection,
+    getDocs,
+    addDoc,
+    doc,
+    setDoc,
+    deleteDoc
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+
+/* =========================================
+   FIREBASE APP
+========================================= */
+
+import {
+    getApp,
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+
+
+/* =========================================
+   HÀM DOM
+========================================= */
+
+function $(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+/* =========================================
+   ESCAPE HTML
+========================================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
+}
+
+
+/* =========================================
+   NGÀY
+========================================= */
+
+$("today").textContent =
+    new Date().toLocaleDateString(
+        "vi-VN",
+        {
+            weekday: "long",
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric"
+        }
+    );
+
+
+/* =========================================
+   DỮ LIỆU
+========================================= */
+
+let accounts = [];
+
+
+/* =========================================
+   LOAD PHÒNG BAN
+========================================= */
+
+async function loadDepartments() {
+
+    const select =
+        $("department");
+
+    select.innerHTML = `
+        <option value="">
+            -- Chọn phòng ban --
+        </option>
+    `;
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "departments"
+                )
+            );
+
+        snapshot.forEach(
+            function(document) {
+
+                const data =
+                    document.data();
+
+                const option =
+                    document.createElement("option");
+
+                option.value =
+                    data.name || "";
+
+                option.textContent =
+                    data.name || data.code || "";
+
+                select.appendChild(option);
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Lỗi load phòng ban:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   LOAD TÀI KHOẢN
+========================================= */
+
+async function loadAccounts() {
+
+    try {
+
+        const snapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "users"
+                )
+            );
+
+        accounts = [];
+
+        snapshot.forEach(
+            function(document) {
+
+                accounts.push({
+
+                    id: document.id,
+
+                    ...document.data()
+
+                });
+
+            }
+        );
+
+        renderAccounts();
+
+    } catch (error) {
+
+        console.error(
+            "Lỗi load tài khoản:",
+            error
+        );
+
+        alert(
+            "Không thể tải danh sách tài khoản.\n\n" +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   HIỂN THỊ TÀI KHOẢN
+========================================= */
+
+function renderAccounts() {
+
+    const keyword =
+        $("search")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const result =
+        accounts.filter(
+            function(account) {
+
+                const text = [
+
+                    account.name,
+
+                    account["tên"],
+
+                    account.email,
+
+                    account.role,
+
+                    account["vai trò"],
+
+                    account.department,
+
+                    account.uid,
+
+                    account.__name__,
+
+                    account.id
+
+                ]
+                .join(" ")
+                .toLowerCase();
+
+
+                return text.includes(
+                    keyword
+                );
+
+            }
+        );
+
+
+    const tbody =
+        $("tbody");
+
+
+    tbody.innerHTML = "";
+
+
+    if (result.length === 0) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="6"
+                    class="empty">
+
+                    <i class="fa-solid fa-users-slash"></i>
+
+                    <br>
+
+                    Chưa có tài khoản.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+    result.forEach(
+        function(account) {
+
+            let role =
+                account.role ||
+                account["vai trò"] ||
+                "employee";
+
+
+            let roleText =
+                "Nhân viên";
+
+
+            if (role === "admin") {
+
+                roleText =
+                    "Admin";
+
+            }
+
+            else if (
+                role === "manager"
+            ) {
+
+                roleText =
+                    "Trưởng phòng";
+
+            }
+
+
+            const name =
+                account.name ||
+                account["tên"] ||
+                "";
+
+
+            const department =
+                account.department ||
+                account["phòng ban"] ||
+                "";
+
+
+            const uid =
+                account.uid ||
+                account.__name__ ||
+                account.id;
+
+
+            tbody.insertAdjacentHTML(
+                "beforeend",
+
+                `
+
+                <tr>
+
+                    <td>
+                        <b>
+                            ${escapeHTML(name)}
+                        </b>
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            account.email || ""
+                        )}
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="status status-success">
+
+                            ${escapeHTML(
+                                roleText
+                            )}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(
+                            department
+                        )}
+                    </td>
+
+
+                    <td>
+                        ${escapeHTML(uid)}
+                    </td>
+
+
+                    <td>
+
+                        <span
+                            class="status status-success">
+
+                            Hoạt động
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+                `
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================
+   MỞ MODAL
+========================================= */
+
+$("addAccount").onclick =
+    function() {
+
+        $("name").value = "";
+
+        $("email").value = "";
+
+        $("password").value = "";
+
+        $("role").value =
+            "employee";
+
+        $("department").value =
+            "";
+
+        $("position").value =
+            "Nhân viên";
+
+
+        $("accountModal")
+            .classList
+            .add("show");
+
+    };
+
+
+/* =========================================
+   ĐÓNG MODAL
+========================================= */
+
+function closeModal() {
+
+    $("accountModal")
+        .classList
+        .remove("show");
+
+}
+
+
+$("closeModal").onclick =
+    closeModal;
+
+
+$("cancel").onclick =
+    closeModal;
+
+
+/* =========================================
+   HIỆN / ẨN MẬT KHẨU
+========================================= */
+
+$("showPassword").onclick =
+    function() {
+
+        const password =
+            $("password");
+
+
+        if (
+            password.type ===
+            "password"
+        ) {
+
+            password.type =
+                "text";
+
+            this.innerHTML =
+                `<i class="fa-solid fa-eye-slash"></i>`;
+
+        }
+
+        else {
+
+            password.type =
+                "password";
+
+            this.innerHTML =
+                `<i class="fa-solid fa-eye"></i>`;
+
+        }
+
+    };
+
+
+/* =========================================
+   TẠO FIREBASE APP PHỤ
+========================================= */
+
+let secondaryAuth = null;
+
+
+try {
+
+    const primaryApp =
+        getApp();
+
+
+    let secondaryApp;
+
+
+    try {
+
+        secondaryApp =
+            getApp(
+                "SecondaryApp"
+            );
+
+    } catch {
+
+        secondaryApp =
+            initializeApp(
+                primaryApp.options,
+                "SecondaryApp"
+            );
+
+    }
+
+
+    secondaryAuth =
+        getAuth(
+            secondaryApp
+        );
+
+
+} catch (error) {
+
+    console.error(
+        "Không thể tạo Firebase Auth phụ:",
+        error
+    );
+
+}
+
+
+/* =========================================
+   TẠO TÀI KHOẢN VÀ ĐỒNG BỘ NHÂN SỰ
+========================================= */
+$("saveAccount").onclick = async function() {
+
+    const name = $("name").value.trim();
+    const email = $("email").value.trim();
+    const password = $("password").value;
+    const role = $("role").value;
+    const department = $("department").value.trim();
+    const position = $("position").value.trim();
+
+    /* ============================
+       KIỂM TRA DỮ LIỆU ĐẦU VÀO
+    ============================ */
+    if (!name) { alert("Vui lòng nhập họ và tên."); return; }
+    if (!email) { alert("Vui lòng nhập email."); return; }
+    if (!password) { alert("Vui lòng nhập mật khẩu."); return; }
+    if (password.length < 6) { alert("Mật khẩu phải có ít nhất 6 ký tự."); return; }
+    if (!secondaryAuth) { alert("Không thể kết nối Firebase Authentication."); return; }
+
+    /* ============================
+       KHÓA NÚT CHỜ XỬ LÝ
+    ============================ */
+    const button = $("saveAccount");
+    button.disabled = true;
+    button.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tạo...`;
+
+    try {
+        /* ============================
+           1. TẠO TÀI KHOẢN TRÊN AUTH
+        ============================ */
+        const credential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+        const uid = credential.user.uid;
+
+        /* ============================
+           2. TỰ ĐỘNG LƯU QUYỀN VÀO BẢNG USERS
+        ============================ */
+        await setDoc(doc(db, "users", uid), {
+            uid: uid,
+            name: name,
+            email: email,
+            role: role,
+            department: department,
+            position: position,
+            createdAt: new Date()
+        });
+
+        /* ============================
+           3. TỰ ĐỘNG TẠO HỒ SƠ NHÂN SỰ (EMPLOYEES)
+        ============================ */
+        await setDoc(doc(db, "employees", uid), {
+            id: uid, 
+            code: "NV_" + uid.substring(0, 5).toUpperCase(), 
+            name: name,
+            email: email,
+            department: department,
+            position: position,
+            gender: "Nam", 
+            phone: "",
+            salary: 0,
+            allowance: 0,
+            workDays: 0,
+            overtimeHours: 0,
+            createdAt: new Date()
+        });
+
+        /* ============================
+           HOÀN TẤT THÀNH CÔNG
+        ============================ */
+        alert("Tạo tài khoản thành công 100%!\n\nHệ thống đã tự động cấp quyền đăng nhập và tạo sẵn hồ sơ nhân sự cho: " + name);
+        closeModal();
+        await loadAccounts();
+
+    } catch (error) {
+        console.error("Lỗi tạo tài khoản:", error);
+        let message = error.message;
+
+        if (error.code === "auth/email-already-in-use") {
+            message = "Email này đã được sử dụng.";
+        } else if (error.code === "auth/invalid-email") {
+            message = "Email không hợp lệ.";
+        } else if (error.code === "auth/weak-password") {
+            message = "Mật khẩu quá yếu (cần tối thiểu 6 ký tự).";
+        } else if (error.code === "permission-denied") {
+            message = "Firebase Firestore không cho phép ghi. Hãy kiểm tra Rules.";
+        }
+        
+        alert("Không thể tạo tài khoản.\n\n" + message);
+    }
+
+    /* ============================
+       MỞ KHÓA NÚT LẠI KHI XONG
+    ============================ */
+    button.disabled = false;
+    button.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Tạo tài khoản`;
+};
+
+/* =========================================
+   TÌM KIẾM
+========================================= */
+
+$("search").oninput =
+    function() {
+
+        renderAccounts();
+
+    };
+
+
+/* =========================================
+   ĐĂNG XUẤT
+========================================= */
+
+$("logout").onclick =
+    async function() {
+
+        try {
+
+            await signOut(auth);
+
+            location.href =
+                "../../index.html";
+
+        }
+
+        catch (error) {
+
+            console.error(
+                error
+            );
+
+            alert(
+                "Không thể đăng xuất."
+            );
+
+        }
+
+    };
+
+
+/* =========================================
+   KIỂM TRA ADMIN
+========================================= */
+
+onAuthStateChanged(
+    auth,
+    async function(user) {
+
+
+        if (!user) {
+
+            location.href =
+                "../../index.html";
+
+            return;
+
+        }
+
+
+        try {
+
+
+            $("welcome").textContent =
+                "Xin chào Admin";
+
+
+            await loadDepartments();
+
+
+            await loadAccounts();
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Lỗi Accounts:",
+                error
+            );
+
+            alert(
+                "Không thể tải trang quản lý tài khoản.\n\n" +
+                error.message
+            );
+
+        }
+
+    }
+);
+
+
+</script>
+
+
+</body>
+
+</html>

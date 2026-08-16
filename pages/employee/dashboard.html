@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard Nhân viên</title>
+
+    <!-- FONT AWESOME -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        /* =====================================================
+           CONTAINER
+        ===================================================== */
+
+        .employee-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f4f6f9;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            width: 260px;
+            min-height: 100vh;
+            background: #343a40;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .sidebar-brand {
+            height: 75px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #212529;
+            padding: 15px;
+        }
+
+        .sidebar-brand h3 {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 600;
+        }
+
+        .sidebar-brand i {
+            margin-right: 8px;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            margin: 0;
+        }
+
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: #cfd8dc;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .sidebar-menu li.active a {
+            background: #007bff;
+            color: white;
+        }
+
+        .sidebar-menu li a i {
+            width: 25px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .top-header {
+            min-height: 75px;
+            background: white;
+            padding: 15px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+
+        .top-header h3 {
+            margin: 0;
+            font-size: 20px;
+            color: #2c3e50;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .today-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background: #dc3545;
+            color: white;
+
+            border: none;
+            padding: 9px 15px;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .btn-logout:hover {
+            background: #c82333;
+        }
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content-body {
+            padding: 30px;
+        }
+
+        .page-title {
+            margin: 0 0 5px 0;
+            font-size: 25px;
+            color: #2c3e50;
+        }
+
+        .page-description {
+            margin: 0 0 25px 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           STATISTICS
+        ===================================================== */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border-radius: 8px;
+
+            padding: 22px;
+
+            display: flex;
+            align-items: center;
+
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #e9f2ff;
+
+            color: #007bff;
+
+            font-size: 22px;
+
+            margin-right: 15px;
+        }
+
+        .stat-info {
+            flex: 1;
+        }
+
+        .stat-info h4 {
+            margin: 0 0 5px 0;
+
+            font-size: 14px;
+
+            color: #6c757d;
+
+            font-weight: 500;
+        }
+
+        .stat-number {
+            margin: 0;
+
+            font-size: 21px;
+
+            font-weight: bold;
+
+            color: #2c3e50;
+        }
+
+        /* =====================================================
+           DASHBOARD GRID
+        ===================================================== */
+
+        .dashboard-grid {
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+
+            border-radius: 8px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .card-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+
+            padding-bottom: 15px;
+
+            border-bottom:
+                1px solid #eee;
+        }
+
+        .card-header h2 {
+            margin: 0;
+
+            font-size: 18px;
+
+            color: #2c3e50;
+        }
+
+        .card-header i {
+            margin-right: 7px;
+        }
+
+        /* =====================================================
+           PROFILE
+        ===================================================== */
+
+        .profile-box {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-avatar {
+            width: 75px;
+            height: 75px;
+
+            border-radius: 50%;
+
+            background: #e9f2ff;
+
+            color: #007bff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 30px;
+        }
+
+        .profile-info h3 {
+            margin: 0 0 7px 0;
+            color: #2c3e50;
+        }
+
+        .profile-info p {
+            margin: 5px 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           ATTENDANCE
+        ===================================================== */
+
+        .attendance-box {
+            text-align: center;
+        }
+
+        .attendance-date {
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .time-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .attendance-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .btn {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: white;
+        }
+
+        .btn-checkin {
+            background: #28a745;
+        }
+
+        .btn-checkin:hover {
+            background: #218838;
+        }
+
+        .btn-checkout {
+            background: #007bff;
+        }
+
+        .btn-checkout:hover {
+            background: #0069d9;
+        }
+
+        .btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .attendance-status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            font-size: 14px;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+
+            color: #495057;
+
+            font-weight: 600;
+
+            text-align: left;
+
+            padding: 12px 10px;
+
+            border-bottom:
+                1px solid #dee2e6;
+        }
+
+        .data-table td {
+            padding: 12px 10px;
+
+            border-bottom:
+                1px solid #eee;
+
+            vertical-align: middle;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .status {
+            display: inline-block;
+
+            padding: 5px 10px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* =====================================================
+           QUICK MENU
+        ===================================================== */
+
+        .quick-menu {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+        }
+
+        .quick-button {
+            display: flex;
+
+            align-items: center;
+
+            padding: 15px;
+
+            background: #f8f9fa;
+
+            border:
+                1px solid #e9ecef;
+
+            border-radius: 7px;
+
+            text-decoration: none;
+
+            color: #343a40;
+
+            transition: 0.2s;
+        }
+
+        .quick-button:hover {
+            background: #007bff;
+
+            color: white;
+
+            border-color: #007bff;
+        }
+
+        .quick-button i {
+            width: 35px;
+
+            font-size: 18px;
+
+            text-align: center;
+
+            margin-right: 8px;
+        }
+
+        .quick-button span {
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           EMPTY
+        ===================================================== */
+
+        .empty-message {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #6c757d;
+
+            font-size: 14px;
+        }
+
+        .empty-message i {
+            display: block;
+
+            font-size: 30px;
+
+            margin-bottom: 10px;
+
+            color: #adb5bd;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .dashboard-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+        @media (max-width: 768px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .top-header {
+                padding: 15px 20px;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .sidebar {
+                width: 70px;
+            }
+
+            .sidebar-brand h3 {
+                font-size: 0;
+            }
+
+            .sidebar-brand i {
+                font-size: 20px;
+                margin: 0;
+            }
+
+            .sidebar-menu li a span {
+                display: none;
+            }
+
+            .sidebar-menu li a {
+                justify-content: center;
+                padding: 17px 5px;
+            }
+
+            .sidebar-menu li a i {
+                margin: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+            .header-right .today-date {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="employee-container">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <h3>
+
+                <i class="fa-solid fa-user"></i>
+
+                Employee Portal
+
+            </h3>
+
+        </div>
+
+
+        <ul class="sidebar-menu">
+            <li class="active">
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+            <li>
+                <a href="profile.html">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Hồ sơ</span>
+                </a>
+            </li>
+            <li>
+                <a href="attendance.html">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Chấm công</span>
+                </a>
+            </li>
+            <!-- Đã sửa leaves.html thành leave.html -->
+            <li>
+                <a href="leave.html">
+                    <i class="fa-solid fa-envelope-open-text"></i>
+                    <span>Đơn từ</span>
+                </a>
+            </li>
+            <!-- Đã sửa payroll.html thành salary.html -->
+            <li>
+                <a href="salary.html">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Lương</span>
+                </a>
+            </li>
+        </ul>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <div class="main-content">
+
+
+        <!-- HEADER -->
+
+        <header class="top-header">
+
+            <h3 id="employeeWelcome">
+
+                Xin chào Nhân viên
+
+            </h3>
+
+
+            <div class="header-right">
+
+                <span
+                    id="todayDate"
+                    class="today-date">
+                </span>
+
+
+                <button
+                    id="logoutBtn"
+                    class="btn-logout">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Đăng xuất
+
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <main class="content-body">
+
+
+            <h1 class="page-title">
+
+                Tổng quan nhân viên
+
+            </h1>
+
+
+            <p class="page-description">
+
+                Theo dõi thông tin cá nhân, chấm công, đơn từ và tiền lương.
+
+            </p>
+
+
+            <!-- =================================================
+                 STATISTICS
+            ================================================== -->
+
+            <div class="stats-grid">
+
+
+                <!-- HÔM NAY -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-calendar-day"></i>
+
+                    </div>
+
+                    <div class="stat-info">
+
+                        <h4>
+                            Trạng thái hôm nay
+                        </h4>
+
+                        <p
+                            id="todayStatus"
+                            class="stat-number">
+
+                            Chưa chấm công
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- GIỜ VÀO -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-right-to-bracket"></i>
+
+                    </div>
+
+                    <div class="stat-info">
+
+                        <h4>
+                            Giờ vào
+                        </h4>
+
+                        <p
+                            id="todayCheckIn"
+                            class="stat-number">
+
+                            --:--
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- GIỜ RA -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-right-from-bracket"></i>
+
+                    </div>
+
+                    <div class="stat-info">
+
+                        <h4>
+                            Giờ ra
+                        </h4>
+
+                        <p
+                            id="todayCheckOut"
+                            class="stat-number">
+
+                            --:--
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ĐƠN -->
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="fa-solid fa-file-circle-exclamation"></i>
+
+                    </div>
+
+                    <div class="stat-info">
+
+                        <h4>
+                            Đơn chờ duyệt
+                        </h4>
+
+                        <p
+                            id="pendingLeaves"
+                            class="stat-number">
+
+                            0
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ROW 1
+            ================================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- THÔNG TIN NHÂN VIÊN -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-user"></i>
+
+                            Thông tin cá nhân
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="profile-box">
+
+                        <div class="profile-avatar">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+
+                        <div class="profile-info">
+
+                            <h3 id="employeeName">
+                                Nhân viên
+                            </h3>
+
+                            <p>
+                                <b>Mã nhân viên:</b>
+                                <span id="employeeCode">---</span>
+                            </p>
+
+                            <p>
+                                <b>Phòng ban:</b>
+                                <span id="employeeDepartment">---</span>
+                            </p>
+
+                            <p>
+                                <b>Email:</b>
+                                <span id="employeeEmail">---</span>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHẤM CÔNG -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-clock"></i>
+
+                            Chấm công hôm nay
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="attendance-box">
+
+                        <div
+                            id="attendanceDate"
+                            class="attendance-date">
+
+                            Hôm nay
+
+                        </div>
+
+
+                        <div
+                            id="currentTime"
+                            class="time-display">
+
+                            00:00:00
+
+                        </div>
+
+
+                        <div class="attendance-buttons">
+
+                            <button
+                                id="checkInBtn"
+                                class="btn btn-checkin">
+
+                                <i class="fa-solid fa-right-to-bracket"></i>
+
+                                Check-in
+
+                            </button>
+
+
+                            <button
+                                id="checkOutBtn"
+                                class="btn btn-checkout">
+
+                                <i class="fa-solid fa-right-from-bracket"></i>
+
+                                Check-out
+
+                            </button>
+
+                        </div>
+
+
+                        <div
+                            id="attendanceMessage"
+                            class="attendance-status">
+
+                            Chưa chấm công hôm nay.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ROW 2
+            ================================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- LỊCH SỬ CHẤM CÔNG -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-calendar-check"></i>
+
+                            Lịch sử chấm công
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Ngày</th>
+
+                                    <th>Giờ vào</th>
+
+                                    <th>Giờ ra</th>
+
+                                    <th>Trạng thái</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="attendanceHistoryBody">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MENU NHANH -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-bolt"></i>
+
+                            Thao tác nhanh
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="quick-menu">
+                        <a
+                            href="profile.html"
+                            class="quick-button">
+                            <i class="fa-solid fa-user"></i>
+                            <span>
+                                Hồ sơ
+                            </span>
+                        </a>
+                        <a
+                            href="attendance.html"
+                            class="quick-button">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            <span>
+                                Xem chấm công
+                            </span>
+                        </a>
+                        <!-- Đã sửa leaves.html thành leave.html -->
+                        <a
+                            href="leave.html"
+                            class="quick-button">
+                            <i class="fa-solid fa-file"></i>
+                            <span>
+                                Tạo đơn từ
+                            </span>
+                        </a>
+                        <!-- Đã sửa payroll.html thành salary.html -->
+                        <a
+                            href="salary.html"
+                            class="quick-button">
+                            <i class="fa-solid fa-money-bill"></i>
+                            <span>
+                                Xem lương
+                            </span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 ROW 3
+            ================================================== -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- ĐƠN TỪ -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-envelope-open-text"></i>
+
+                            Đơn từ gần đây
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Loại đơn</th>
+
+                                    <th>Ngày</th>
+
+                                    <th>Trạng thái</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="leavesBody">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LƯƠNG -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h2>
+
+                            <i class="fa-solid fa-money-bill-wave"></i>
+
+                            Lương gần đây
+
+                        </h2>
+
+                    </div>
+
+
+                    <div class="table-wrapper">
+
+                        <table class="data-table">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>Tháng</th>
+
+                                    <th>Thực nhận</th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="payrollBody">
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
+<script type="module">
+    import { auth, db } from "../../js/firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+    import { collection, getDocs, doc, getDoc, setDoc, updateDoc, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    const $ = (id) => document.getElementById(id);
+    
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+    
+    const getToday = () => {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    };
+    
+    const getCurrentTime = () => new Date().toLocaleTimeString('vi-VN', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+
+    function updateClock() { if ($("currentTime")) $("currentTime").textContent = getCurrentTime(); }
+    setInterval(updateClock, 1000); updateClock();
+
+    function showDate() {
+        const text = new Date().toLocaleDateString("vi-VN", { weekday: "long", year: "numeric", month: "2-digit", day: "2-digit" });
+        if ($("todayDate")) $("todayDate").textContent = text;
+        if ($("attendanceDate")) $("attendanceDate").textContent = text;
+    }
+
+    let currentUser = null, currentEmployee = null, todayAttendance = null;
+
+    // ĐÃ SỬA: Lấy dữ liệu bằng getDoc(UID) thay vì quét toàn bộ bảng
+    async function loadEmployee(user) {
+        try {
+            const empSnap = await getDoc(doc(db, "employees", user.uid));
+            return empSnap.exists() ? { id: empSnap.id, ...empSnap.data() } : null;
+        } catch (error) {
+            console.error("Lỗi tìm nhân viên:", error);
+            return null;
+        }
+    }
+
+    function showEmployee(employee, user) {
+        const name = employee?.name || user.email;
+        $("employeeWelcome").textContent = "Xin chào " + name;
+        $("employeeName").textContent = name;
+        $("employeeCode").textContent = employee?.code || "---";
+        $("employeeDepartment").textContent = employee?.department || "---";
+        $("employeeEmail").textContent = employee?.email || user.email;
+    }
+
+    // ĐÃ SỬA: Thêm điều kiện where("uid", "==", user.uid) để vượt tường lửa
+    async function loadTodayAttendance(user) {
+        const today = getToday();
+        todayAttendance = null;
+        try {
+            const q = query(collection(db, "attendance"), where("uid", "==", user.uid), where("dateKey", "==", today));
+            const snap = await getDocs(q);
+            snap.forEach(doc => { todayAttendance = { id: doc.id, ...doc.data() }; });
+        } catch (err) { console.error(err); }
+        updateAttendanceUI();
+    }
+
+    function updateAttendanceUI() {
+        if (!todayAttendance) {
+            $("todayStatus").textContent = "Chưa chấm công";
+            $("todayCheckIn").textContent = "--:--";
+            $("todayCheckOut").textContent = "--:--";
+            $("attendanceMessage").textContent = "Chưa chấm công hôm nay.";
+            $("checkInBtn").disabled = false;
+            $("checkOutBtn").disabled = true;
+            return;
+        }
+        $("todayCheckIn").textContent = todayAttendance.checkIn || "--:--";
+        $("todayCheckOut").textContent = todayAttendance.checkOut || "--:--";
+        if (todayAttendance.checkOut) {
+            $("todayStatus").textContent = "Đã hoàn thành";
+            $("attendanceMessage").textContent = "Bạn đã hoàn thành chấm công hôm nay.";
+            $("checkInBtn").disabled = true;
+            $("checkOutBtn").disabled = true;
+        } else {
+            $("todayStatus").textContent = "Đang làm việc";
+            $("attendanceMessage").textContent = "Bạn đã check-in. Hãy check-out khi kết thúc.";
+            $("checkInBtn").disabled = true;
+            $("checkOutBtn").disabled = false;
+        }
+    }
+
+    async function checkIn() {
+        if (!currentUser) return;
+        try {
+            const now = getCurrentTime();
+            const todayStr = getToday();
+            const ref = doc(db, "attendance", `${currentUser.uid}_${todayStr}`);
+            
+            const data = {
+                uid: currentUser.uid,
+                email: currentUser.email,
+                employeeCode: currentEmployee?.code || "",
+                name: currentEmployee?.name || currentUser.email,
+                department: currentEmployee?.department || "",
+                dateKey: todayStr,
+                date: new Date().toLocaleDateString("vi-VN"),
+                checkIn: now,
+                checkOut: "",
+                status: "Đang làm",
+                workDays: 1,
+                overtimeHours: 0,
+                updatedAt: serverTimestamp()
+            };
+            
+            await setDoc(ref, data, { merge: true });
+            todayAttendance = { id: `${currentUser.uid}_${todayStr}`, ...data };
+            updateAttendanceUI();
+            alert("Check-in thành công!");
+            await loadAttendanceHistory();
+        } catch (error) {
+            alert("Lỗi check-in: " + error.message);
+        }
+    }
+
+    async function checkOut() {
+        if (!currentUser || !todayAttendance) return;
+        try {
+            const now = getCurrentTime();
+            await updateDoc(doc(db, "attendance", todayAttendance.id), {
+                checkOut: now,
+                status: "Hoàn thành",
+                updatedAt: serverTimestamp()
+            });
+            todayAttendance.checkOut = now;
+            updateAttendanceUI();
+            alert("Check-out thành công!");
+            await loadAttendanceHistory();
+        } catch (error) {
+            alert("Lỗi check-out: " + error.message);
+        }
+    }
+
+    async function loadAttendanceHistory() {
+        const body = $("attendanceHistoryBody");
+        body.innerHTML = "";
+        try {
+            const snap = await getDocs(query(collection(db, "attendance"), where("uid", "==", currentUser.uid)));
+            let list = [];
+            snap.forEach(doc => list.push({ id: doc.id, ...doc.data() }));
+            list.sort((a, b) => String(b.dateKey || "").localeCompare(String(a.dateKey || "")));
+            const recent = list.slice(0, 7);
+
+            if (recent.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" class="empty-message">Chưa có dữ liệu</td></tr>`;
+                return;
+            }
+            recent.forEach(item => {
+                let status = item.checkOut ? "Hoàn thành" : "Đang làm";
+                let statusClass = item.checkOut ? "status-success" : "status-warning";
+                body.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td>${escapeHTML(item.date || "")}</td>
+                        <td>${escapeHTML(item.checkIn || "--:--")}</td>
+                        <td>${escapeHTML(item.checkOut || "--:--")}</td>
+                        <td><span class="status ${statusClass}">${status}</span></td>
+                    </tr>
+                `);
+            });
+        } catch (error) { console.error(error); }
+    }
+
+    async function loadLeaves() {
+        const body = $("leavesBody");
+        body.innerHTML = "";
+        try {
+            const snap = await getDocs(query(collection(db, "leaves"), where("uid", "==", currentUser.uid)));
+            let list = [];
+            snap.forEach(doc => list.push(doc.data()));
+            $("pendingLeaves").textContent = list.filter(i => i.status === "pending").length;
+
+            if (list.length === 0) {
+                body.innerHTML = `<tr><td colspan="3" class="empty-message">Chưa có đơn từ</td></tr>`;
+                return;
+            }
+            list.slice(0, 6).forEach(leave => {
+                let status = leave.status || "pending";
+                let text = status === "approved" ? "Đã duyệt" : (status === "rejected" ? "Từ chối" : "Chờ duyệt");
+                let className = status === "approved" ? "status-success" : (status === "rejected" ? "status-danger" : "status-warning");
+                body.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td>${escapeHTML(leave.type || "Nghỉ phép")}</td>
+                        <td>${escapeHTML(leave.from || leave.date || leave.startDate || "---")}</td>
+                        <td><span class="status ${className}">${text}</span></td>
+                    </tr>
+                `);
+            });
+        } catch (error) { console.error(error); }
+    }
+
+    async function loadPayroll() {
+        const body = $("payrollBody");
+        body.innerHTML = "";
+        try {
+            const snap = await getDocs(query(collection(db, "payroll"), where("uid", "==", currentUser.uid)));
+            let list = [];
+            snap.forEach(doc => list.push(doc.data()));
+            if (list.length === 0) {
+                body.innerHTML = `<tr><td colspan="2" class="empty-message">Chưa có dữ liệu lương</td></tr>`;
+                return;
+            }
+            list.slice(0, 5).forEach(salary => {
+                const month = salary.month || salary.thang || "---";
+                const money = salary.netSalary || salary.net || salary.total || salary.amount || 0;
+                body.insertAdjacentHTML("beforeend", `
+                    <tr>
+                        <td>${escapeHTML(month)}</td>
+                        <td><b>${Number(money).toLocaleString("vi-VN")} đ</b></td>
+                    </tr>
+                `);
+            });
+        } catch (error) { console.error(error); }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { location.href = "../../index.html"; return; }
+        currentUser = user;
+        try {
+            showDate();
+            currentEmployee = await loadEmployee(user);
+            showEmployee(currentEmployee, user);
+            await loadTodayAttendance(user);
+            await loadAttendanceHistory();
+            await loadLeaves();
+            await loadPayroll();
+        } catch (error) {
+            console.error(error);
+        }
+    });
+
+    $("checkInBtn").addEventListener("click", checkIn);
+    $("checkOutBtn").addEventListener("click", checkOut);
+    $("logoutBtn").addEventListener("click", async () => { await signOut(auth); location.href = "../../index.html"; });
+</script>
+
+</body>
+
+</html>

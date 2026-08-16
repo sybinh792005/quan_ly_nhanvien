@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .logo {
+            height: 70px;
+            background: #212529;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu li a {
+            display: block;
+            padding: 16px 20px;
+            color: #ddd;
+            text-decoration: none;
+        }
+
+        .menu li a:hover,
+        .menu li.active a {
+            background: #007bff;
+            color: white;
+        }
+
+        .menu i {
+            width: 25px;
+        }
+
+        .main {
+            flex: 1;
+        }
+
+        .header {
+            height: 70px;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,.08);
+        }
+
+        .header h3 {
+            margin: 0;
+        }
+
+        .logout {
+            border: none;
+            background: #dc3545;
+            color: white;
+            padding: 9px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .content h1 {
+            margin-top: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .stat {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,.06);
+        }
+
+        .stat i {
+            width: 55px;
+            height: 55px;
+            background: #e9f2ff;
+            color: #007bff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 22px;
+            margin-right: 15px;
+        }
+
+        .stat h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .stat p {
+            margin: 0;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.06);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 11px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+        }
+
+        th {
+            background: #f8f9fa;
+        }
+
+        .quick {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .quick a {
+            padding: 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .quick a:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .empty {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+        }
+
+        @media(max-width: 1000px) {
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 700px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo span,
+            .menu span {
+                display: none;
+            }
+
+            .menu a {
+                text-align: center;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <i class="fa-solid fa-user-shield"></i>
+            <span>Portal Admin</span>
+        </div>
+
+        <ul class="menu">
+
+            <li class="active">
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Tổng quan</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="employees.html">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Nhân viên</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="departments.html">
+                    <i class="fa-solid fa-building"></i>
+                    <span>Phòng ban</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="accounts.html">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Tài khoản</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="attendance.html">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <span>Chấm công</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="payroll.html">
+                    <i class="fa-solid fa-money-bill"></i>
+                    <span>Tính lương</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="reports.html">
+                    <i class="fa-solid fa-chart-column"></i>
+                    <span>Báo cáo</span>
+                </a>
+            </li>
+
+        </ul>
+    </aside>
+
+    <main class="main">
+
+        <header class="header">
+
+            <h3>Xin chào Admin</h3>
+
+            <button class="logout" onclick="logout()">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Đăng xuất
+            </button>
+
+        </header>
+
+        <section class="content">
+
+            <h1>Tổng quan hệ thống</h1>
+
+            <p>Quản lý và theo dõi toàn bộ hệ thống nhân sự.</p>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <i class="fa-solid fa-users"></i>
+                    <div>
+                        <h4>Nhân viên</h4>
+                        <p id="employeeCount">0</p>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <i class="fa-solid fa-building"></i>
+                    <div>
+                        <h4>Phòng ban</h4>
+                        <p id="departmentCount">0</p>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <i class="fa-solid fa-calendar-check"></i>
+                    <div>
+                        <h4>Chấm công hôm nay</h4>
+                        <p id="attendanceCount">0</p>
+                    </div>
+                </div>
+
+                <div class="stat">
+                    <i class="fa-solid fa-file-circle-exclamation"></i>
+                    <div>
+                        <h4>Đơn chờ duyệt</h4>
+                        <p id="leaveCount">0</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="grid">
+
+                <div class="card">
+
+                    <h2>
+                        <i class="fa-solid fa-user-plus"></i>
+                        Nhân viên
+                    </h2>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Mã NV</th>
+                                <th>Họ tên</th>
+                                <th>Phòng ban</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="employeeTable"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="card">
+
+                    <h2>
+                        <i class="fa-solid fa-bolt"></i>
+                        Thao tác nhanh
+                    </h2>
+
+                    <div class="quick">
+
+                        <a href="employees.html">
+                            <i class="fa-solid fa-user-plus"></i>
+                            Thêm nhân viên
+                        </a>
+
+                        <a href="departments.html">
+                            <i class="fa-solid fa-building"></i>
+                            Phòng ban
+                        </a>
+
+                        <a href="attendance.html">
+                            <i class="fa-solid fa-calendar-check"></i>
+                            Chấm công
+                        </a>
+
+                        <a href="payroll.html">
+                            <i class="fa-solid fa-money-bill"></i>
+                            Tính lương
+                        </a>
+
+                        <a href="accounts.html">
+                            <i class="fa-solid fa-user-gear"></i>
+                            Tài khoản
+                        </a>
+
+                        <a href="reports.html">
+                            <i class="fa-solid fa-chart-column"></i>
+                            Báo cáo
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="grid">
+
+                <div class="card">
+
+                    <h2>
+                        <i class="fa-solid fa-clock"></i>
+                        Chấm công hôm nay
+                    </h2>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Nhân viên</th>
+                                <th>Giờ vào</th>
+                                <th>Giờ ra</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="attendanceTable"></tbody>
+
+                    </table>
+
+                </div>
+
+                <div class="card">
+
+                    <h2>
+                        <i class="fa-solid fa-file"></i>
+                        Đơn chờ duyệt
+                    </h2>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Nhân viên</th>
+                                <th>Loại</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="leaveTable"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script type="module">
+    // 1. KẾT NỐI FIREBASE
+    import { db } from "../../js/firebase.js";
+    import { collection, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    // Hàm Helper lấy ngày hôm nay chuẩn định dạng
+    const dateKey = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+    // 2. TẢI TẤT CẢ DỮ LIỆU DASHBOARD
+    window.loadDashboard = async function() {
+        try {
+            // ==========================================
+            // A. THỐNG KÊ NHÂN VIÊN
+            // ==========================================
+            const empSnap = await getDocs(collection(db, "employees"));
+            const employees = [];
+            empSnap.forEach(doc => employees.push(doc.data()));
+            
+            document.getElementById("employeeCount").textContent = employees.length;
+
+            const employeeTable = document.getElementById("employeeTable");
+            employeeTable.innerHTML = "";
+            // Lấy 5 nhân viên mới nhất
+            employees.slice(-5).reverse().forEach(item => {
+                employeeTable.innerHTML += `
+                    <tr>
+                        <td>${item.code || ""}</td>
+                        <td>${item.name || ""}</td>
+                        <td>${item.department || ""}</td>
+                        <td>${item.email || ""}</td>
+                    </tr>
+                `;
+            });
+            if (employees.length === 0) employeeTable.innerHTML = `<tr><td colspan="4" class="empty">Chưa có nhân viên</td></tr>`;
+
+
+            // ==========================================
+            // B. THỐNG KÊ PHÒNG BAN
+            // ==========================================
+            const deptSnap = await getDocs(collection(db, "departments"));
+            document.getElementById("departmentCount").textContent = deptSnap.size;
+
+
+            // ==========================================
+            // C. THỐNG KÊ CHẤM CÔNG (HÔM NAY)
+            // ==========================================
+            const attSnap = await getDocs(collection(db, "attendance"));
+            const attendance = [];
+            const todayStr = new Date().toLocaleDateString("vi-VN");
+            const todayKeyStr = dateKey(new Date());
+            
+            attSnap.forEach(doc => {
+                const data = doc.data();
+                // Khớp định dạng ngày (vi-VN hoặc YYYY-MM-DD)
+                if(data.date === todayStr || data.dateKey === todayKeyStr) {
+                    attendance.push(data);
+                }
+            });
+            
+            document.getElementById("attendanceCount").textContent = attendance.length;
+
+            const attendanceTable = document.getElementById("attendanceTable");
+            attendanceTable.innerHTML = "";
+            attendance.forEach(item => {
+                const isDone = item.checkOut ? true : false;
+                attendanceTable.innerHTML += `
+                    <tr>
+                        <td>${item.name || ""}</td>
+                        <td>${item.checkIn || ""}</td>
+                        <td>${item.checkOut || "-"}</td>
+                        <td><span style="color: ${isDone ? 'green' : '#ffc107'}; font-weight: bold;">${isDone ? "Hoàn thành" : "Đang làm"}</span></td>
+                    </tr>
+                `;
+            });
+            if (attendance.length === 0) attendanceTable.innerHTML = `<tr><td colspan="4" class="empty">Chưa có ai chấm công</td></tr>`;
+
+
+            // ==========================================
+            // D. THỐNG KÊ ĐƠN NGHỈ PHÉP (CHỜ DUYỆT)
+            // ==========================================
+            const leaveSnap = await getDocs(collection(db, "leaves"));
+            const pendingLeaves = [];
+            
+            leaveSnap.forEach(doc => {
+                const data = doc.data();
+                if(data.status === "pending" || data.status === "Chờ duyệt") {
+                    pendingLeaves.push(data);
+                }
+            });
+            
+            document.getElementById("leaveCount").textContent = pendingLeaves.length;
+
+            const leaveTable = document.getElementById("leaveTable");
+            leaveTable.innerHTML = "";
+            pendingLeaves.forEach(item => {
+                leaveTable.innerHTML += `
+                    <tr>
+                        <td>${item.name || ""}</td>
+                        <td>${item.type || ""}</td>
+                        <td><span style="color: #ffc107; font-weight: bold;">Chờ duyệt</span></td>
+                    </tr>
+                `;
+            });
+            if (pendingLeaves.length === 0) leaveTable.innerHTML = `<tr><td colspan="3" class="empty">Không có đơn chờ duyệt</td></tr>`;
+
+        } catch (error) {
+            console.error("Lỗi tải Dashboard:", error);
+        }
+    };
+
+    // 3. ĐĂNG XUẤT
+    window.logout = function() {
+        window.location.href = "../../index.html";
+    };
+
+    // Tự động tải dữ liệu khi mở trang
+    window.loadDashboard();
+</script>
+
+</body>
+</html>

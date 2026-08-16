@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Quản lý tiền lương</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background: #343a40;
+    color: white;
+}
+
+.logo {
+    height: 70px;
+    background: #212529;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.logo i {
+    margin-right: 10px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu a {
+    display: block;
+    padding: 16px 20px;
+    color: #ddd;
+    text-decoration: none;
+}
+
+.menu a:hover,
+.menu .active a {
+    background: #007bff;
+    color: white;
+}
+
+.menu i {
+    width: 25px;
+}
+
+.main {
+    flex: 1;
+}
+
+.header {
+    height: 70px;
+    background: white;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content {
+    padding: 30px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+button {
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.calculate {
+    background: #007bff;
+    color: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #f8f9fa;
+}
+
+input {
+    padding: 8px;
+    width: 130px;
+}
+
+@media(max-width:700px) {
+
+    .sidebar {
+        width: 70px;
+    }
+
+    .logo span,
+    .menu span {
+        display: none;
+    }
+
+    .menu a {
+        text-align: center;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<aside class="sidebar">
+
+<div class="logo">
+
+<i class="fa-solid fa-user-shield"></i>
+
+<span>Portal Admin</span>
+
+</div>
+
+<ul class="menu">
+
+<li>
+<a href="dashboard.html">
+<i class="fa-solid fa-chart-pie"></i>
+<span>Tổng quan</span>
+</a>
+</li>
+
+<li>
+<a href="employees.html">
+<i class="fa-solid fa-users"></i>
+<span>Nhân viên</span>
+</a>
+</li>
+
+<li>
+<a href="departments.html">
+<i class="fa-solid fa-building"></i>
+<span>Phòng ban</span>
+</a>
+</li>
+
+<li>
+<a href="accounts.html">
+<i class="fa-solid fa-user-gear"></i>
+<span>Tài khoản</span>
+</a>
+</li>
+
+<li>
+<a href="attendance.html">
+<i class="fa-solid fa-calendar-check"></i>
+<span>Chấm công</span>
+</a>
+</li>
+
+<li class="active">
+<a href="payroll.html">
+<i class="fa-solid fa-money-bill"></i>
+<span>Tính lương</span>
+</a>
+</li>
+
+<li>
+<a href="reports.html">
+<i class="fa-solid fa-chart-column"></i>
+<span>Báo cáo</span>
+</a>
+</li>
+
+</ul>
+
+</aside>
+
+<main class="main">
+
+<header class="header">
+
+<h3>Quản lý tiền lương</h3>
+
+<button onclick="logout()"
+style="background:#dc3545;color:white;">
+Đăng xuất
+</button>
+
+</header>
+
+<section class="content">
+
+<h1>Bảng tính lương</h1>
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>STT</th>
+<th>Mã NV</th>
+<th>Họ tên</th>
+<th>Phòng ban</th>
+<th>Lương cơ bản</th>
+<th>Phụ cấp</th>
+<th>Khấu trừ</th>
+<th>Thực nhận</th>
+<th>Thao tác</th>
+
+</tr>
+
+</thead>
+
+<tbody id="table"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+<script type="module">
+    // 1. KẾT NỐI FIREBASE
+    import { db } from "../../js/firebase.js";
+    import { collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+    // Hàm định dạng tiền tệ
+    window.formatMoney = function(number) {
+        return Number(number).toLocaleString("vi-VN") + " đ";
+    };
+
+    // 2. TẢI DANH SÁCH NHÂN VIÊN VÀ LƯƠNG TỪ FIREBASE
+    window.loadPayroll = async function() {
+        const table = document.getElementById("table");
+        table.innerHTML = `<tr><td colspan="9" style="text-align:center;">Đang tải dữ liệu đám mây...</td></tr>`;
+
+        try {
+            const snapshot = await getDocs(collection(db, "employees"));
+            table.innerHTML = "";
+            let count = 0;
+
+            snapshot.forEach((docSnap) => {
+                count++;
+                const emp = docSnap.data();
+                const id = docSnap.id; // Lấy ID tài liệu của Firebase
+
+                // Lấy dữ liệu lương hiện tại (nếu chưa có thì mặc định là 0)
+                const basic = Number(emp.salary || 0);
+                const allowance = Number(emp.allowance || 0);
+                const deduction = Number(emp.deduction || 0);
+                
+                // Công thức tính thực nhận (theo UI của bạn)
+                const total = basic + allowance - deduction;
+
+                // Chú ý: ID của input được gán theo ID của Firebase thay vì index
+                table.innerHTML += `
+                    <tr>
+                        <td>${count}</td>
+                        <td>${emp.code || ""}</td>
+                        <td>${emp.name || ""}</td>
+                        <td>${emp.department || ""}</td>
+                        <td>
+                            <input type="number" id="basic-${id}" value="${basic}">
+                        </td>
+                        <td>
+                            <input type="number" id="allowance-${id}" value="${allowance}">
+                        </td>
+                        <td>
+                            <input type="number" id="deduction-${id}" value="${deduction}">
+                        </td>
+                        <td>
+                            <strong style="color: red;">${window.formatMoney(total)}</strong>
+                        </td>
+                        <td>
+                            <button class="calculate" onclick="window.saveSalary('${id}')">Lưu</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (count === 0) {
+                table.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:30px;">Chưa có nhân viên</td></tr>`;
+            }
+        } catch (error) {
+            console.error("Lỗi tải lương:", error);
+            table.innerHTML = `<tr><td colspan="9" style="text-align:center;color:red;">Lỗi kết nối Firebase</td></tr>`;
+        }
+    };
+
+    // 3. CẬP NHẬT LƯƠNG LÊN FIREBASE
+    window.saveSalary = async function(id) {
+        // Lấy giá trị từ các ô input tương ứng với ID của nhân viên
+        const basicVal = document.getElementById("basic-" + id).value;
+        const allowanceVal = document.getElementById("allowance-" + id).value;
+        const deductionVal = document.getElementById("deduction-" + id).value;
+
+        try {
+            // Cập nhật thẳng vào document của nhân viên đó trong bảng 'employees'
+            await updateDoc(doc(db, "employees", id), {
+                salary: Number(basicVal),
+                allowance: Number(allowanceVal),
+                deduction: Number(deductionVal)
+            });
+            
+            alert("Đã cập nhật bảng lương lên đám mây thành công!");
+            window.loadPayroll(); // Load lại để tính lại cột Thực nhận
+        } catch (error) {
+            console.error("Lỗi cập nhật lương:", error);
+            alert("Không thể lưu dữ liệu!");
+        }
+    };
+
+    // 4. ĐĂNG XUẤT
+    window.logout = function() {
+        window.location.href = "../../index.html";
+    };
+
+    // Tự động chạy khi tải trang
+    window.loadPayroll();
+</script>
+
+</body>
+</html>
